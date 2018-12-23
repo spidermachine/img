@@ -54,6 +54,9 @@ def img_process(img_path, img_file):
                 remain.append(x)
                 remain_map[str(x)] = (x, y, w, h)
     cv2.imwrite(img_file, image)
+    # kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+    # image=cv2.erode(image, kernel)
+    # cv2.imwrite("er_" + img_file, image)
     remain.sort()
 
     rcount = 0
@@ -147,8 +150,9 @@ def img_process(img_path, img_file):
             x, y, w, h = remain_list[i]
             # print(x, y, w, h)
             newimage = image[y:y + h, x:x + w]
-            # kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
-            # newimage=cv2.dilate(newimage, kernel)
+            if h > 35 or w > 35:
+                kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))
+                newimage=cv2.erode(newimage, kernel)
             img_true_path = basepath + "/" + img_file.split('.')[0][i]
             if not os.path.exists(img_true_path):
                 os.makedirs(img_true_path)
